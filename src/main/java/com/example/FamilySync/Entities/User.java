@@ -1,7 +1,10 @@
 package com.example.FamilySync.Entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "app_user")
+@Table(name = "users") // Renamed to avoid conflict with reserved keywords
 public class User {
 
     @Id
@@ -24,14 +27,13 @@ public class User {
     private String password;
     private String otp;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_group",
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
     private Set<Group> groups = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Folder> folders = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Medical> medicalRecords = new HashSet<>();

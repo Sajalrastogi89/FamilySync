@@ -1,7 +1,10 @@
 package com.example.FamilySync.Entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "App_Group")
+@Table(name = "groups") // Renamed to avoid conflict with reserved keywords
 public class Group {
 
     @Id
@@ -25,8 +28,10 @@ public class Group {
     private Set<User> users = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "group_task",
+    @JoinTable(
+            name = "group_task",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
     private Set<Task> tasks = new HashSet<>();
 }
