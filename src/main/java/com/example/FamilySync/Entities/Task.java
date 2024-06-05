@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name="tasks")
 public class Task {
 
     @Id

@@ -27,7 +27,7 @@ public class User {
     private String password;
     private String otp;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -37,4 +37,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Medical> medicalRecords = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Folder> folders=new HashSet<>();
 }

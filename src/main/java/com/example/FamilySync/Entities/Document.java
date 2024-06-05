@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor@NoArgsConstructor
 @Entity
+@Table(name="documents")
 public class Document {
 
     @Id

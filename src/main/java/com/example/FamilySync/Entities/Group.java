@@ -27,7 +27,7 @@ public class Group {
     @ManyToMany(mappedBy = "groups")
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "group_task",
             joinColumns = @JoinColumn(name = "group_id"),
