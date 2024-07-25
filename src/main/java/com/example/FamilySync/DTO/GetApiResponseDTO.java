@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class APIResponse<T> {
-    private String Message;
-    private Boolean Status;
+public class GetApiResponseDTO<T> {
+    private String message;
+    private Boolean status;
     private T responseObject;
 }

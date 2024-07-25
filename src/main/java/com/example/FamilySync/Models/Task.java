@@ -1,4 +1,4 @@
-package com.example.FamilySync.Entities;
+package com.example.FamilySync.Models;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,14 +1,14 @@
 package com.example.FamilySync.DTO;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Getter@Setter@AllArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor
-public class ErrorDetails {
-    
+public class PostApiResponseDTO {
+    private String message;
+    private boolean status;
 }

@@ -1,4 +1,4 @@
-package com.example.FamilySync.Entities;
+package com.example.FamilySync.Models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,6 +26,7 @@ public class User {
     private String email;
     private String password;
     private String otp;
+    private Boolean verified=false;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
