@@ -1,11 +1,18 @@
 package com.example.FamilySync.Services.ServiceImplementors;
 
-import com.example.FamilySync.DTO.UserDTO;
+import com.example.FamilySync.DTO.requestDTO.UserDTO;
+import com.example.FamilySync.Exceptions.CustomExceptionHandler;
+import com.example.FamilySync.Exceptions.OTPGenerationException;
 import com.example.FamilySync.Models.User;
 import com.example.FamilySync.Repositories.UserDAO;
 import com.example.FamilySync.Services.AuthService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AuthServiceImplementation implements AuthService {
@@ -52,4 +59,24 @@ public class AuthServiceImplementation implements AuthService {
     public UserDTO userToDto(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
+
+    @Override
+    public String generateRandomOTP() {
+        return String.format("%06d", new Random().nextInt(999999));
+    }
+
+    @Override
+    public void storeOtpAndExpiry(String email, String otp, LocalDateTime expiresAt) {
+       User user=userDAO.findByEmail(email);
+       if(user==null){
+           throw new CustomExceptionHandler(String.format("%s does not exists",email), HttpStatus.BAD_REQUEST);
+       }
+       else{
+           user.setEmailOTP(otp);
+           user.setEmailOTPExpirationTime(expiresAt);
+           userDAO.save(user);
+       }
+    }
+
+
 }

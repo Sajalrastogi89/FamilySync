@@ -1,4 +1,4 @@
-package com.example.FamilySync.DTO;
+package com.example.FamilySync.DTO.requestDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

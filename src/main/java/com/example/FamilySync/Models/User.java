@@ -6,7 +6,9 @@ import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Getter
@@ -25,7 +27,8 @@ public class User {
     private String image;
     private String email;
     private String password;
-    private String otp;
+    private String emailOTP;
+    private LocalDateTime emailOTPExpirationTime;
     private Boolean verified=false;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -41,4 +44,5 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Folder> folders=new HashSet<>();
+
 }

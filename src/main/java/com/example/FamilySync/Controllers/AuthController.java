@@ -1,18 +1,19 @@
 package com.example.FamilySync.Controllers;
 
-import com.example.FamilySync.DTO.GetApiResponseDTO;
-import com.example.FamilySync.DTO.PostApiResponseDTO;
-import com.example.FamilySync.DTO.UserDTO;
+import com.example.FamilySync.DTO.responseDTO.ApiResponseWithObjectDTO;
+import com.example.FamilySync.DTO.responseDTO.ApiResponseWithoutObjectDTO;
+import com.example.FamilySync.DTO.requestDTO.UserDTO;
+import com.example.FamilySync.Exceptions.CustomExceptionHandler;
+import com.example.FamilySync.Exceptions.OTPGenerationException;
 import com.example.FamilySync.Exceptions.UserAlreadyExistsException;
 import com.example.FamilySync.Models.User;
 import com.example.FamilySync.Services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,26 +28,55 @@ public class AuthController {
 
     // Register User
     @PostMapping("/register")
-    public ResponseEntity<PostApiResponseDTO> register(@Valid @RequestBody UserDTO userDTO){
-        //convert userDTO to user
-        User user=authService.DtoToUser(userDTO);
-        // check user Already exists
-        boolean exists=authService.checkUser(user.getEmail());
-        // if (true) -> throw user already exists exception
-        if(exists){
-            throw new UserAlreadyExistsException(user.getEmail());
+    public ResponseEntity<ApiResponseWithoutObjectDTO> register(@Valid @RequestBody UserDTO userDTO){
+        try {
+            //convert userDTO to user
+            User user = authService.DtoToUser(userDTO);
+            // check user Already exists
+            boolean exists = authService.checkUser(user.getEmail());
+            // if (true) -> throw user already exists exception
+            if (exists) {
+                throw new CustomExceptionHandler(String.format("%s already exists", user.getEmail()),HttpStatus.BAD_REQUEST);
+            }
+            // else -> register user
+            authService.registerUser(user);
+            return new ResponseEntity<>(new ApiResponseWithoutObjectDTO("User created successfully", true), HttpStatus.CREATED);
         }
-        // else -> register user
-        authService.registerUser(user);
-        return new ResponseEntity<>(new PostApiResponseDTO("User created successfully", true), HttpStatus.CREATED);
-    }
+        catch (CustomExceptionHandler e){
+            throw e;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("Exception in registering user");
+        }
+
+
+
+        }
 
     //Login user
 
 
 
     // OTP send
+    @PostMapping("/generateOTP/{email}")
+    public ResponseEntity<ApiResponseWithObjectDTO<?>> generateOTP(@PathVariable String email){
+        try {
+            // generate otp
+            String Otp = authService.generateRandomOTP();
+            LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
+            //add in database with expiry date
+            authService.storeOtpAndExpiry(email,Otp,expiresAt);
 
+            // return generated otp
+            return new ResponseEntity<>(new ApiResponseWithObjectDTO<String>("Otp generated successfully",true,Otp),HttpStatus.CREATED);
+        }
+        catch (CustomExceptionHandler e){
+            throw e;
+        }
+        catch (Exception e){
+            throw new RuntimeException(String.format("Exception in creating OTP for email %s",email));
+        }
+    }
 
 
     // OTP verification

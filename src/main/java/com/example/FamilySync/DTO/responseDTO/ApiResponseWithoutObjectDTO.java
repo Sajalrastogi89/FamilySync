@@ -1,4 +1,4 @@
-package com.example.FamilySync.DTO;
+package com.example.FamilySync.DTO.responseDTO;
 
 
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter@Setter@AllArgsConstructor
 @NoArgsConstructor
-public class PostApiResponseDTO {
+public class ApiResponseWithoutObjectDTO {
     private String message;
     private boolean status;
 }
